@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
 
 ///ESTRUCTURA CONTENIDO
 
@@ -13,6 +15,38 @@ typedef struct {
    int activo;                     // indica 1 o 0 si el contenido está activo
 } stContenido;
 
+
+///ESTRUCTURA ARBOL DE CONTENIDO
+
+typedef struct _nodoArbolContenido{
+    stContenido contenido;
+    struct _nodoArbolContenido* izquierda;
+    struct _nodoArbolContenido* derecha;
+} nodoArbolContenido;
+
+typedef struct
+{
+    int idUsuario;                 // auto incremental
+    char nombre[30];
+    char apellido[30];
+    char userName[20];
+    char password[20];
+    char mail[30];
+    char genero;
+    int puntaje;
+    int nivel;
+    stContenido* listaDeFavoritos;
+    int rol;                     // 1: es admin - 0: es comun
+    int activo;                 // indica 1 o 0 si el usuario está activo
+} stUsuario;
+
+/*//ESTRUCTURA ARBOL DE USUARIOS
+typedef struct _nodoArbolUsuario{
+    stUsuario usuario;
+    struct _nodoArbolUsuario* izquierda;
+    struct _nodoArbolUsuario* derecha;
+}nodoArbolUsuario;
+*/
 ///LISTA SIMPLE
 
 typedef struct _nodoSimple{
@@ -21,326 +55,156 @@ typedef struct _nodoSimple{
 
 } nodoSimple;
 
+//ESTRUCTURA FAVORITOS
 
-
-
-///ESTRUCTURA MENSAJERIA
-
-typedef struct {
-   int idUsuarioEmisor;
-   int idUsuarioReceptor;
-   int idContenidoEnviado;
-   char mensaje[300];
-   int leido;                      // 1:si 0:no
-} stMensajeria;
-
-///ESTRUCTURA ARBOL DE USUARIOS
-
-typedef struct _nodoArbolContenido{
-    stContenido contenido;
-    struct _nodoArbolContenido* izquierda;
-    struct _nodoArbolContenido* derecha;
-} nodoArbolContenido;
-
-
-/////////////////////////////
-nodoSimple* inicListaSimple(void);
-nodoSimple* crearNodoSimple (stContenido contenidoNuevo);
-nodoSimple* agregarPpioSimple (nodoSimple* lista, nodoSimple* nuevoNodo);
-
-
-
-/////////////////////////////
-nodoArbolContenido* inicArbolContenido ();
-nodoArbolContenido* crearNodoArbolContenido (stContenido nuevoContenido);
-int profundidadArbolContenido (nodoArbolContenido* raiz);
-int subprogramaAlturaArbolContenido(nodoArbolContenido* raiz);
-int esHojaContenido (nodoArbolContenido* arbol); //devuelve 1 si es hoja o 0 si no es hoja
-nodoArbolContenido* eliminarNodoContenido (nodoArbolContenido* arbol, int idNodoABorrar);
-nodoArbolContenido* nodoMasDerecho (nodoArbolContenido* arbol);
-nodoArbolContenido* nodoMasIzquierdo(nodoArbolContenido* arbol);
-
-
-nodoSimple* arbolAListaContenido (nodoArbolContenido* arbol, nodoSimple* lista);
-
-
-
-
-
-
-
-
-
-
-int main()
+typedef struct
 {
-    printf("Hello world!\n");
-    return 0;
-}
+    int idFavorito;
+    int idUsuario;
+    int idContenido;
+} stFavorito;
 
-nodoSimple* inicListaSimple(void){
-    return NULL;
-}
+void quienesSomos(void);
+void faq (void);
+void subprogramaLogIn (void);
+void subprogramaSignIn (void);
 
-nodoSimple* crearNodoSimple (stContenido contenidoNuevo){
-    nodoSimple* aux = (nodoSimple*) malloc(sizeof(nodoSimple));
-    aux->contenidoSocial= contenidoNuevo;
-    aux->siguiente = NULL;
+///////////////////ESTRUCTURA ADL///////////////////
+stUsuario* inicADL (void);
 
-    return aux;
-}
-
-nodoSimple* agregarPpioSimple (nodoSimple* lista, nodoSimple* nuevoNodo){
-    if(!lista){
-        lista = nuevoNodo;
-    }
-    else {
-        nuevoNodo->siguiente = lista;
-        lista=nuevoNodo;
-    }
-    return lista;
-}
+///////////////////////////////////////////////////
 
 
-nodoArbolContenido* inicArbolContenido (){
-    return NULL;
+int main (void)
+{
+    int opcion=0;
+    FILE* pArchiUsuarios=fopen("usuarios.dat", "a+b");
+    FILE* pArchiContenido=fopen("contenidos.dat", "a+b");
+    FILE* pArchiFavoritos=fopen("favoritos.dat", "a+b");
 
-}
-
-nodoArbolContenido* crearNodoArbolContenido (stContenido nuevoContenido){
-    nodoArbolContenido* aux = (nodoArbolContenido*) malloc(sizeof(nodoArbolContenido));
-
-    aux->contenido=nuevoContenido;
-    aux->derecha=NULL;
-    aux->izquierda=NULL;
-
-    return aux;
-}
-
-int profundidadArbolContenido (nodoArbolContenido* raiz){
-    int rta=0;
-    if(!raiz){
-        int profundidadIzquierda=0;
-        int profundidadDerecha=0;
-        profundidadIzquierda = profundidadArbolContenido(raiz->izquierda);
-        profundidadDerecha = profundidadArbolContenido (raiz->derecha);
-        if (profundidadIzquierda>=profundidadDerecha){
-            rta=profundidadIzquierda;
-        }
-        else{
-            rta=profundidadDerecha;
-        }
-    }
-    return rta;
-}
-
-int subprogramaAlturaArbolContenido(nodoArbolContenido* raiz){
-    if(!raiz){
-        return 0;
-    }
-    else{
-        return (profundidadArbolContenido(raiz)+1);
-    }
-
-}
-
-void preorderArbolContenido (nodoArbolContenido* raiz){
-    if(raiz){
-        printf("|%d|", raiz->contenido.idContenido);
-        preorderArbolContenido(raiz->izquierda);
-        preorderArbolContenido(raiz->derecha);
-    }
-
-}
-
-void inorderArbolContenido (nodoArbolContenido* raiz){
-    if(raiz){
-        inorderArbolContenido (raiz->izquierda);
-        printf("|%d|", raiz->contenido.idContenido);
-        inorderArbolContenido (raiz->derecha);
-
-    }
-
-}
-
-void postorderArbolContenido (nodoArbolContenido* raiz){
-    if (raiz){
-        postorderArbolContenido (raiz->izquierda);
-        postorderArbolContenido (raiz->derecha);
-        printf("|%d|", raiz->contenido.idContenido);
-
-    }
-
-}
-
-int numeroHojasArbolContenido(nodoArbolContenido* raiz){
-    int rta=0;
-    if(raiz){
-        if(raiz->izquierda==NULL && raiz->derecha == NULL){
-            rta=1;
-        }
-        rta+=numeroHojasArbolContenido(raiz->izquierda);
-        rta+=numeroHojasArbolContenido(raiz->derecha);
-    }
-
-    return rta;
-
-}
-
-void eliminarArbolContenido (nodoArbolContenido* raiz){
-    if(raiz){
-        eliminarArbolContenido(raiz->izquierda);
-        eliminarArbolContenido(raiz->derecha);
-        free(raiz);
-    }
-}
-
-nodoArbolContenido* buscarNodoArbolContenido (nodoArbolContenido* arbol, int idBuscado){
-    nodoArbolContenido* nodoBuscado=NULL;
-    if(arbol){
-        if(idBuscado==arbol->contenido.idContenido){
-            nodoBuscado=arbol;
-        }
-        else{
-            if(idBuscado<=arbol->contenido.idContenido){
-                nodoBuscado=buscarNodoArbolContenido(arbol->izquierda, idBuscado);
-            }
-            else{
-                nodoBuscado=buscarNodoArbolContenido(arbol->derecha, idBuscado);
-            }
-        }
-
-    }
-
-    return nodoBuscado;
-}
-
-nodoArbolContenido* buscarNodoContenidoIterativa (nodoArbolContenido* arbol, int idBuscado){
-    nodoArbolContenido* arbolAux=arbol;
-    int encontrado = 0;
-    if(arbol){
-        while (arbolAux && encontrado==0){
-            if(idBuscado==arbolAux->contenido.idContenido){
-                encontrado=1;
-            }
-            else{
-                if(idBuscado<=arbolAux->contenido.idContenido){
-                    arbolAux=arbolAux->izquierda;
-
-                }
-                else{
-                    arbolAux=arbolAux->derecha;
-                }
+    stUsuario* adlUsuarios= inicADL();
+    nodoArbolContenido* arbolContenido =inicArbolContenido();
 
 
-            }
-
-
-        }
-
-
-    }
-    return arbolAux;
-}
-
-
-
-nodoArbolContenido* insertarNuevoNodoContenido (nodoArbolContenido* arbol, nodoArbolContenido* nuevoNodo){
-    if(!arbol){
-        arbol=nuevoNodo;
-    }
-    else{
-        if(nuevoNodo->contenido.idContenido <= arbol->contenido.idContenido){
-            arbol=insertarNuevoNodoContenido(arbol->izquierda, nuevoNodo);
-        }
-        else {
-            arbol=insertarNuevoNodoContenido(arbol->derecha, nuevoNodo);
-        }
-    }
-
-    return arbol;
-}
-
-nodoArbolContenido* eliminarNodoContenido (nodoArbolContenido* arbol, int idNodoABorrar){
-    nodoArbolContenido* aux=NULL;
-
-    if(arbol){
-        if(arbol->contenido.idContenido == idNodoABorrar){
-            if(esHojaContenido(arbol)){
-                free(arbol);
-                arbol=NULL;
-            }
-            else{
-                if(arbol->izquierda){
-                    aux=nodoMasDerecho(arbol->izquierda);
-                    arbol->contenido=aux->contenido;
-                    arbol->izquierda=eliminarNodoContenido(arbol->izquierda, aux->contenido.idContenido);
-                }
-                else{
-                    if(idNodoABorrar>arbol->contenido.idContenido){
-                        arbol->derecha=eliminarNodoContenido(arbol->derecha, idNodoABorrar);
-                    }
-                    else{
-                        arbol->izquierda=eliminarNodoContenido(arbol->izquierda, idNodoABorrar);
-                    }
-
-                }
-            }
-        }
-    }
-    else{
-
-
-    }
-
-    return arbol;
-
-}
-
-
-int esHojaContenido (nodoArbolContenido* arbol){ //devuelve 1 si es hoja o 0 si no es hoja
-    int rta=0;
-
-    if(!(arbol->derecha)&&!(arbol->izquierda))
-        rta=1;
-
-    return rta;
-}
-
-nodoArbolContenido* nodoMasDerecho (nodoArbolContenido* arbol){
-    nodoArbolContenido* rta =arbol;
-    if(rta && (rta->derecha)==NULL){
-    }
-    else{
-        rta=nodoMasDerecho(arbol->derecha);
-
-    }
-    return rta;
-
-}
-
-nodoArbolContenido* nodoMasIzquierdo(nodoArbolContenido* arbol){
-    nodoArbolContenido* rta =arbol;
-    if(rta && (rta->izquierda)==NULL){
-    }
-    else{
-        rta=nodoMasDerecho(arbol->izquierda);
-
-    }
-    return rta;
-
-}
-
-
-nodoSimple* arbolAListaContenido (nodoArbolContenido* arbol, nodoSimple* lista){
-    nodoSimple* listaDeArbol=inicListaSimple();
-
-    if(arbol)
+    if(pArchiUsuarios && pArchiContenido && pArchiFavoritos)
     {
-        lista=arbolAListaContenido(arbol->derecha, lista);
-        lista=agregarPpioSimple(lista, (crearNodoSimple(arbol->contenido)));
-        lista=arbolAListaContenido(arbol->izquierda, lista);
+        arbolContenido=deArchiToArbolContenido (arbolContenido, pArchiContenido);
+        deArchiToArregloUsuarios (adlUsuarios, pArchiUsuarios);
+
+        do
+        {
+            system("cls");
+            printf("Bienvenido a la Red Social mas usada. \n\n\n\n\n");
+            printf("%*s%s\n", 50, "", "iN-Social");
+            printf("\n\n\n\n");
+            printf("iN-Social! te ayuda a comunicarte y compartir con las personas que forman parte de tu vida.");
+            printf("\n\n\n\n\n");
+            printf("Menu de opciones: \n\n");
+            printf("1) log in\n");
+            printf("2) sign in\n");
+            printf("3) Acerca de nosotros\n");
+            printf("4) FAQ\n");
+            printf("0) SALIR\n");
+            printf("\n\n\n\n");
+
+            printf("OPCION ELEGIDA:  ");
+
+
+            scanf("%d", &opcion);
+            fflush(stdin);
+            printf("\n\n\n");
+            switch (opcion)
+            {
+            case 1:
+                subprogramaLogIn();
+                break;
+            case 2:
+                subprogramaSignIn();
+                break;
+            case 3:
+                quienesSomos();
+                break;
+            case 4:
+                faq();
+                break;
+
+            default:
+
+                if(opcion==0)
+                {
+                    system ("cls");
+                    printf("\n\n\n\nGracias por utilizar iN-Social! Hasta pronto!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    printf("%*s%s\n", 50, "", "version 2.0");
+                    printf("\n\n\n\n\n");
+
+                }
+                break;
+
+            }
+            system("pause");
+
+        }
+        while (opcion!=0);
+
+
+        fclose(pArchiContenido);
+        fclose(pArchiUsuarios);
+        fclose(pArchiFavoritos);
+    }
+    else{
+        system ("cls");
+        if(!pArchiContenido){
+            perror("Error al abrir al cargar los contenidos.\n\n");
+        }
+        if(!pArchiUsuarios){
+            perror("Error al cargar el usuario\n\n");
+        }
+        if(!pArchiFavoritos){
+            perror("Error al cargar los favoritos\n\n");
+        }
+        exit(EXIT_FAILURE);
     }
 
-    return listaDeArbol;
+    return 0;
+
+}
+
+void quienesSomos(void){
+    system("cls");
+    printf("\n\n\niN-Social! nace como una forma de comunicarnos en clase.\n\n");
+    printf("Somos un grupo de cuatro estudiantes realizando el trabajo práctico final de Laboratorio de Programacion 2.\n");
+    printf("Conformamos el grupo denominado \"Los Simuladores\"\n");
+    printf("Esperamos con ansias aprobar este trabajo de la mejor manera posible y cumplir con todas las expectativas de la catedra *guinio guinio*\n\n\n\n");
+    printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    printf("Saludos Gustavo *guinio guinio*\n\n\n");
+
+}
+
+void faq (void){
+    system("cls");
+    printf("\n\n\n\nPregunten en clase, asi podemos sumarlas aca como preguntas frecuentes.\n\n\n");
+
+}
+
+void subprogramaLogIn (void){
+
+}
+
+void subprogramaSignIn (void){
+
+}
+
+
+stUsuario* inicADL (void){
+    return NULL;
+}
+
+int calcularElementosEnArchivoUsuario(FILE* archi){
+    int cantidadElementos=0;
+    fseek(archi, 0, SEEK_END); //seteo cursor al final del archivo
+    cantidadElementos=ftell(archi) / sizeof(stUsuario);
+    fseek(archi,0,SEEK_SET);
+
+    return cantidadElementos;
+
 }
