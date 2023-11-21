@@ -1,78 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "stContenido.h"
+#include "listaContenido.h"
+#include "arbolContenido.h"
+#include "stUsuario.h"
+#include "adlUsuarios.h"
+#include "stFavorito.h"
 
 
-///ESTRUCTURA CONTENIDO
-
-typedef struct {
-   int idContenido; // auto incremental
-   char titulo[30];
-   char descripcion[300];
-   char categoria[30];
-   int likes;
-   int puntosPorCompartir;
-   int activo;                     // indica 1 o 0 si el contenido está activo
-} stContenido;
-
-
-///ESTRUCTURA ARBOL DE CONTENIDO
-
-typedef struct _nodoArbolContenido{
-    stContenido contenido;
-    struct _nodoArbolContenido* izquierda;
-    struct _nodoArbolContenido* derecha;
-} nodoArbolContenido;
-
-typedef struct
-{
-    int idUsuario;                 // auto incremental
-    char nombre[30];
-    char apellido[30];
-    char userName[20];
-    char password[20];
-    char mail[30];
-    char genero;
-    int puntaje;
-    int nivel;
-    stContenido* listaDeFavoritos;
-    int rol;                     // 1: es admin - 0: es comun
-    int activo;                 // indica 1 o 0 si el usuario está activo
-} stUsuario;
-
-/*//ESTRUCTURA ARBOL DE USUARIOS
-typedef struct _nodoArbolUsuario{
-    stUsuario usuario;
-    struct _nodoArbolUsuario* izquierda;
-    struct _nodoArbolUsuario* derecha;
-}nodoArbolUsuario;
-*/
-///LISTA SIMPLE
-
-typedef struct _nodoSimple{
-    stContenido contenidoSocial;
-    struct _nodoSimple* siguiente;
-
-} nodoSimple;
-
-//ESTRUCTURA FAVORITOS
-
-typedef struct
-{
-    int idFavorito;
-    int idUsuario;
-    int idContenido;
-} stFavorito;
 
 void quienesSomos(void);
-void faq (void);
+void faq(const char *nombreArchivo);
 void subprogramaLogIn (void);
 void subprogramaSignIn (void);
-
-///////////////////ESTRUCTURA ADL///////////////////
-stUsuario* inicADL (void);
-
-///////////////////////////////////////////////////
 
 
 int main (void)
@@ -82,14 +23,14 @@ int main (void)
     FILE* pArchiContenido=fopen("contenidos.dat", "a+b");
     FILE* pArchiFavoritos=fopen("favoritos.dat", "a+b");
 
-    stUsuario* adlUsuarios= inicADL();
+    stCelda* adl= inicADL();
     nodoArbolContenido* arbolContenido =inicArbolContenido();
 
 
     if(pArchiUsuarios && pArchiContenido && pArchiFavoritos)
     {
         arbolContenido=deArchiToArbolContenido (arbolContenido, pArchiContenido);
-        deArchiToArregloUsuarios (adlUsuarios, pArchiUsuarios);
+        deArchiToArregloUsuarios (adl, pArchiUsuarios);
 
         do
         {
@@ -125,7 +66,7 @@ int main (void)
                 quienesSomos();
                 break;
             case 4:
-                faq();
+                faq("meme.txt");
                 break;
 
             default:
@@ -180,11 +121,6 @@ void quienesSomos(void){
 
 }
 
-void faq (void){
-    system("cls");
-    printf("\n\n\n\nPregunten en clase, asi podemos sumarlas aca como preguntas frecuentes.\n\n\n");
-
-}
 
 void subprogramaLogIn (void){
 
@@ -195,16 +131,25 @@ void subprogramaSignIn (void){
 }
 
 
-stUsuario* inicADL (void){
-    return NULL;
+
+
+
+void faq(const char *nombreArchivo) {
+    FILE *archivo = fopen(nombreArchivo, "r");
+
+    if (archivo == NULL) {
+        perror("Error al abrir el meme");
+        exit (EXIT_FAILURE);
+    }
+    else{
+        char linea[1000];  // Ajusta el tamaño según sea necesario
+
+        while (fgets(linea, sizeof(linea), archivo) != NULL) {
+            printf("%s", linea);
+        }
+
+        fclose(archivo);
+    }
+
 }
 
-int calcularElementosEnArchivoUsuario(FILE* archi){
-    int cantidadElementos=0;
-    fseek(archi, 0, SEEK_END); //seteo cursor al final del archivo
-    cantidadElementos=ftell(archi) / sizeof(stUsuario);
-    fseek(archi,0,SEEK_SET);
-
-    return cantidadElementos;
-
-}

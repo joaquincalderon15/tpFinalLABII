@@ -31,6 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="adlUsuarios.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="adlUsuarios.h" />
+		<Unit filename="arbolContenido.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="arbolContenido.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

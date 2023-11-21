@@ -1,0 +1,54 @@
+# depslib dependency file v1.0
+1700539179 source:d:\codeblock큦 projects\tpfinallabii\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"stContenido.h"
+	"listaContenido.h"
+	"arbolContenido.h"
+	"stUsuario.h"
+	"adlUsuarios.h"
+	"stFavorito.h"
+
+1700518676 source:d:\codeblock큦 projects\tpfinallabii\stcontenido.c
+	<stdlib.h>
+	<stdio.h>
+	"stContenido.h"
+
+1700536740 d:\codeblock큦 projects\tpfinallabii\stcontenido.h
+
+1700533414 source:d:\codeblock큦 projects\tpfinallabii\stfavorito.c
+
+1700536740 source:d:\codeblock큦 projects\tpfinallabii\stusuario.c
+	<stdio.h>
+	<stdlib.h>
+	"stUsuario.h"
+
+1700536740 d:\codeblock큦 projects\tpfinallabii\stusuario.h
+
+1700537546 source:d:\codeblock큦 projects\tpfinallabii\arbolcontenido.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"stContenido.h"
+	"arbolContenido.h"
+
+1700538853 d:\codeblock큦 projects\tpfinallabii\arbolcontenido.h
+	"stContenido.h"
+
+1700538870 d:\codeblock큦 projects\tpfinallabii\listacontenido.h
+	"stContenido.h"
+
+1700539314 d:\codeblock큦 projects\tpfinallabii\adlusuarios.h
+	"stContenido.h"
+	"stUsuario.h"
+	"listaContenido.h"
+
+1700536740 d:\codeblock큦 projects\tpfinallabii\stfavorito.h
+
+1700538497 source:d:\codeblock큦 projects\tpfinallabii\listacontenido.c
+	<stdio.h>
+	<stdlib.h>
+	"stContenido.h"
+	"listaContenido.h"
+
